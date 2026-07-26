@@ -1,0 +1,141 @@
+﻿@{
+    ViewData["Title"] = "Pin Image Prompt Generator";
+}
+
+<div class="container mt-5" style="max-width: 650px;">
+    <div class="card shadow-sm border-danger">
+        <div class="card-body p-4">
+            <h2 class="text-center text-danger mb-4 fw-bold">Pin Image Prompt Generator</h2>
+
+            <form id="promptForm">
+                <!-- Pin Title -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Pin Title</label>
+                    <input type="text" id="pinTitle" class="form-control" placeholder="E.g. Women Outfit Ideas" />
+                </div>
+
+                <!-- Niche / Topic -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Niche / Topic</label>
+                    <input type="text" id="niche" class="form-control" placeholder="E.g. Fashion, Beauty" />
+                </div>
+
+                <!-- Pin Type -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Pin Type</label>
+                    <select id="pinType" class="form-select">
+                        <option value="Simple Top Text">Simple Top Text</option>
+                        <option value="4 Images Grid + Center Text">4 Images Grid + Center Text</option>
+                        <option value="1 Big Top + 2 Small Below">1 Big Top + 2 Small Below</option>
+                        <option value="Bold Center Text + CTA">Bold Center Text + CTA</option>
+                        <option value="Black Banner at Center">Black Banner at Center</option>
+                        <option value="Black Circle at Center">Black Circle at Center</option>
+                        <option value="Close-up Detail Collage">Close-up Detail Collage</option>
+                        <option value="Full-View Head-to-Toe">Full-View Head-to-Toe</option>
+                        <option value="4 Steps Routine Collage">4 Steps Routine Collage</option>
+                        <option value="Lifestyle Cozy Scene">Lifestyle Cozy Scene</option>
+                        <option value="Large Number + Subtitle">Large Number + Subtitle</option>
+                        <option value="Accessory / Small Detail Focus">Accessory / Small Detail Focus</option>
+                        <option value="Parenting / Mom Cozy Vibe">Parenting / Mom Cozy Vibe</option>
+                        <option value="Modern Layout + Read More">Modern Layout + Read More</option>
+                    </select>
+                </div>
+
+                <!-- NEW: Aesthetic Vibe / Mood Selector -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Aesthetic Vibe / Mood</label>
+                    <select id="vibe" class="form-select">
+                        <option value="Clean & Minimalist">Clean & Minimalist</option>
+                        <option value="Warm & Cozy">Warm & Cozy</option>
+                        <option value="Vibrant & Trendy">Vibrant & Trendy</option>
+                        <option value="Luxury & Elegant">Luxury & Elegant</option>
+                        <option value="Moody & Cinematic">Moody & Cinematic</option>
+                    </select>
+                </div>
+
+                <!-- Aspect Ratio Selector (Pinterest Size) -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Aspect Ratio (Pinterest Size)</label>
+                    <select id="aspectRatio" class="form-select">
+                        <option value="--ar 2:3" selected>2:3 (Standard Vertical Pin - Recommended)</option>
+                        <option value="--ar 9:16">9:16 (Story / Full Vertical)</option>
+                        <option value="--ar 1:1">1:1 (Square)</option>
+                    </select>
+                </div>
+
+                <!-- Optional: People/Objects -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Optional: People/Objects</label>
+                    <input type="text" id="peopleObjects" class="form-control" placeholder="E.g. Women, Models, Kids" />
+                </div>
+
+                <!-- Optional: Background Details -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Optional: Background Details</label>
+                    <input type="text" id="background" class="form-control" placeholder="E.g. pastel background, nature scene" />
+                </div>
+
+                <!-- Action Buttons Group -->
+                <div class="d-flex gap-2 mb-3">
+                    <button type="button" class="btn btn-danger w-75 py-2" onclick="generatePrompt()">Generate Prompt</button>
+                    <button type="button" class="btn btn-secondary w-25 py-2" onclick="clearForm()">Clear</button>
+                </div>
+
+                <!-- Output Box -->
+                <div class="mb-3">
+                    <textarea id="outputBox" class="form-control border-danger" rows="3" readonly placeholder="Your generated prompt will appear here..."></textarea>
+                </div>
+
+                <!-- Copy Button -->
+                <button type="button" class="btn btn-danger w-100 py-2" onclick="copyPrompt()">Copy Prompt</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function generatePrompt() {
+            let title = document.getElementById('pinTitle').value.trim();
+            let niche = document.getElementById('niche').value.trim();
+            let type = document.getElementById('pinType').value;
+            let vibe = document.getElementById('vibe').value;
+            let ratio = document.getElementById('aspectRatio').value;
+            let people = document.getElementById('peopleObjects').value.trim();
+            let bg = document.getElementById('background').value.trim();
+
+            if (!title && !niche) {
+                alert("Please fill at least Pin Title or Niche!");
+                return;
+            }
+
+            let promptText = `A high-quality, Pinterest-optimized aesthetic image about "${title || niche}", niche: ${niche || 'General'}. Style layout: ${type}. Vibe: ${vibe}.`;
+
+            if (people) {
+                promptText += ` Featuring: ${people}.`;
+            }
+            if (bg) {
+                promptText += ` Background details: ${bg}.`;
+            }
+            promptText += ` Cinematic lighting, 4k resolution, hyper-detailed, professional design ${ratio}.`;
+
+            document.getElementById('outputBox').value = promptText;
+        }
+
+        function clearForm() {
+            document.getElementById('promptForm').reset();
+            document.getElementById('outputBox').value = '';
+        }
+
+        function copyPrompt() {
+            let outputBox = document.getElementById('outputBox');
+            if (!outputBox.value) {
+                alert("Please generate a prompt first!");
+                return;
+            }
+            outputBox.select();
+            document.execCommand('copy');
+            alert("Prompt copied to clipboard!");
+        }
+    </script>
+}
