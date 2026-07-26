@@ -1,11 +1,12 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Explicitly configure port 8080 for Railway
+builder.WebHost.UseUrls("http://0.0.0.0:8080");
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
